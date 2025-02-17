@@ -1,0 +1,13 @@
+package com.github.Sparks_of_Fabrication.Natural_Disaster_API;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class NaturalDisasterApiApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(NaturalDisasterApiApplication.class, args);
+	}
+
+}
