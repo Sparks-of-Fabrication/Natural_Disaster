@@ -5,4 +5,11 @@
 
 ## React Native & Expo Documentation
 <a href="https://reactnative.dev/">React Native Documentation</a>
+<br/>
 <a href="https://docs.expo.dev/">Expo Documentation</a>
+
+## Expo commands
+```
+npm i
+npm run start
+```
