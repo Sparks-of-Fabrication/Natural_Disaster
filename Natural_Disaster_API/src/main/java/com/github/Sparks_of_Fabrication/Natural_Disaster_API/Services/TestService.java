@@ -2,6 +2,7 @@ package com.github.Sparks_of_Fabrication.Natural_Disaster_API.Services;
 
 import com.github.Sparks_of_Fabrication.Natural_Disaster_API.Models.Test;
 import com.github.Sparks_of_Fabrication.Natural_Disaster_API.Repositories.TestRepository;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@NoArgsConstructor
+@AllArgsConstructor
 public class TestService {
-    private TestRepository testRepository;
+    private final TestRepository testRepository;
+
     public List<Test> fetchTests() {
 
         return testRepository.findAll();
