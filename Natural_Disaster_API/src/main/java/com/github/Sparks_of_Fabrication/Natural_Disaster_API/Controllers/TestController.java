@@ -13,11 +13,14 @@ import java.util.List;
 
 @RestController()
 @Getter
-@AllArgsConstructor
 @RequestMapping("/test")
 public class TestController {
     private final TestService testService;
-    
+
+    public TestController(TestService testService) {
+        this.testService = testService;
+    }
+
     @GetMapping("")
     public ResponseEntity<List<Test>> getTests() {
         HttpHeaders headers = new HttpHeaders();
