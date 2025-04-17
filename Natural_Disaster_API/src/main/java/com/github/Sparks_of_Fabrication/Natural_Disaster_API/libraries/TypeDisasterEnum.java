@@ -1,9 +1,0 @@
-package com.github.Sparks_of_Fabrication.Natural_Disaster_API.libraries;
-
-public enum TypeDisasterEnum{
-    EARTHQUAKE,LANDSLIDE,VOLCANIC_ERUPTIONS,AVALANCHES,
-    TORNADO, HURRICANE, THUNDERSTORM,HAILSTORM, BLIZZARD, HEATWAVE,
-    FLOOD, FLASH_FLOOD ,DROUGHT, TSUNAMI
-
-
-}
