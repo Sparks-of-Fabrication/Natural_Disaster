@@ -1,8 +1,8 @@
 package com.github.Sparks_of_Fabrication.Natural_Disaster_API.Models;
 
+import com.github.Sparks_of_Fabrication.Natural_Disaster_API.libraries.SeverityDisaster;
 import com.github.Sparks_of_Fabrication.Natural_Disaster_API.libraries.TypeDisasterEnum;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,16 +10,22 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
-@Data
-@Getter
 @Setter
-public class TypeDisaster {
+@Getter
+@NoArgsConstructor
+public class Severity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Enumerated(EnumType.STRING)
-    private TypeDisasterEnum name;
+    private SeverityDisaster name;
 
+    public void setName(SeverityDisaster name) {
+        this.name = name;
+    }
+    public SeverityDisaster getName() {
+        return name;
+    }
 }

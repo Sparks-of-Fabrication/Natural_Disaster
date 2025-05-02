@@ -9,6 +9,7 @@ const WebScreen: React.FC = () => {
         <div style={{ height: '100vh', width: '100%' }}>
             {/* Render the map only on web */}
             <WebMap />
+
         </div>
     );
 };
