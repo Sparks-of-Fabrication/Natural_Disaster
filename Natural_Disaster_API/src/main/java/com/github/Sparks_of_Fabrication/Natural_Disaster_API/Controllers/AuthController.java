@@ -18,7 +18,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8081")
 public class AuthController {
 
-    private AuthorizationService authService;
+    private final AuthorizationService authService;
 
     public AuthController(AuthorizationService authService) {
         this.authService = authService;

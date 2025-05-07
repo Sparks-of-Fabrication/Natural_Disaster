@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF properly in lambda style
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/startup/**").permitAll()  // Allow login & startup endpoints
+                        .requestMatchers("/api/login", "/api/startup/**","/api/employee/**","/api/disaster/**").permitAll()  // Allow login & startup endpoints
                         .anyRequest().authenticated()  // All other endpoints require auth
                 )
                 .httpBasic(AbstractHttpConfigurer::disable); // Optional: disable HTTP Basic auth if using JWT

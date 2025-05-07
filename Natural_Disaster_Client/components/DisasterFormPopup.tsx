@@ -37,7 +37,7 @@ const DisasterFormPopup: React.FC<Props> = ({ position }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!disasterType || !severity || !description || !position) {
+        if (!disasterType || !severity || !position) {
             setError("Please fill out all fields, including selecting a location.");
             return;
         }

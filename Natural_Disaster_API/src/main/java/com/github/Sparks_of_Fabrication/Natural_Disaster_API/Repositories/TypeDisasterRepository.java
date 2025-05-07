@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface TypeDisasterRepository extends JpaRepository<TypeDisaster, UUID> {
-    boolean existsByName(TypeDisasterEnum name);
-    TypeDisaster findByName(String name);
+    boolean existsByName(String name);
 }

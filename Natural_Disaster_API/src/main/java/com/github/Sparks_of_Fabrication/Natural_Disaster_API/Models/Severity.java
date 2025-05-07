@@ -1,7 +1,6 @@
 package com.github.Sparks_of_Fabrication.Natural_Disaster_API.Models;
 
-import com.github.Sparks_of_Fabrication.Natural_Disaster_API.libraries.SeverityDisaster;
-import com.github.Sparks_of_Fabrication.Natural_Disaster_API.libraries.TypeDisasterEnum;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +18,6 @@ public class Severity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private SeverityDisaster name;
+    private String name;
 
-    public void setName(SeverityDisaster name) {
-        this.name = name;
-    }
-    public SeverityDisaster getName() {
-        return name;
-    }
 }
