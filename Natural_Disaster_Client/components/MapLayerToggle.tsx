@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
-
+import LayersIcon from '@mui/icons-material/Layers';
 const layers = {
     street: L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors",
@@ -46,7 +46,7 @@ const MapLayerToggle: React.FC = () => {
         <div
             style={{
                 position: "absolute",
-                top: "115px",
+                top: "130px",
                 right: "10px",
                 zIndex: 1000,
                 background: "white",
@@ -63,17 +63,18 @@ const MapLayerToggle: React.FC = () => {
                     background: "rgba(255, 255, 255, 0.8)",
                     border: "none",
                     borderRadius: "50%", // circle shape
-                    width: "40px",       // slightly larger for better emoji centering
-                    height: "40px",
+                    width: "48px",       // slightly larger for better emoji centering
+                    height: "48px",
                     fontSize: "20px",
                     cursor: "pointer",
                     display: "flex",     // center content
                     alignItems: "center",
                     justifyContent: "center",
+
                 }}
                 title="Change Map Layer"
             >
-                🌐
+                <LayersIcon/>
             </button>
 
             {/* Expanded options container (slide out to the left) */}

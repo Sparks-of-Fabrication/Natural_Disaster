@@ -3,7 +3,8 @@ import AddDisasterTypeButton from "@/components/employeeFunctions/AddDisasterTyp
 import AddEmployeeButton from "@/components/employeeFunctions/AddEmployeeButton";
 import AddRoleButton from "@/components/employeeFunctions/AddRoleButton";
 import AddSeverityButton from "@/components/employeeFunctions/addSeverityButton";
-
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 const LoginButton: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [username, setUsername] = useState("");
@@ -49,6 +50,7 @@ const LoginButton: React.FC = () => {
 
             // Store the token in localStorage and mark user as authenticated
             localStorage.setItem("token", data.token);
+            console.log(localStorage.getItem("token"));
             setIsAuthenticated(true);  // Update authentication state
             setError(""); // Clear error message after successful login
 
@@ -75,7 +77,7 @@ const LoginButton: React.FC = () => {
                     onClick={() => setIsOpen(true)}
                     style={{
                         position: "absolute",
-                        bottom: "10px",
+                        bottom: "20px",
                         right: "10px",
                         zIndex: 1000,
                         background: "white",
@@ -88,14 +90,14 @@ const LoginButton: React.FC = () => {
                     }}
                     title="Employee Login"
                 >
-                    👤
+                    <LoginIcon/>
                 </button>
             ) : (
                 <button
                     onClick={handleLogout}
                     style={{
                         position: "absolute",
-                        top: "170px",
+                        bottom: "20px",
                         right: "10px",
                         zIndex: 1000,
                         background: "white",
@@ -108,7 +110,7 @@ const LoginButton: React.FC = () => {
                     }}
                     title="Logout"
                 >
-                    🚪
+                    <LogoutIcon/>
                 </button>
             )}
 

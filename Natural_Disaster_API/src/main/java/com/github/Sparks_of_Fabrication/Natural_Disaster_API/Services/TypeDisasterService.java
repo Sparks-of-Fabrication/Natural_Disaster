@@ -18,33 +18,15 @@ public class TypeDisasterService {
     @Autowired
     private TypeDisasterRepository typeDisasterRepository;
 
-    private List<TypeDisaster> disasterTypesCache = new ArrayList<>();
-
-    public List<TypeDisaster> getAllDisasterTypes() {
-        // If the cache is empty, load disaster types from DB
-        if (disasterTypesCache.isEmpty()) {
-            disasterTypesCache = typeDisasterRepository.findAll();
-        }
-        return disasterTypesCache;
-    }
-
-    public TypeDisaster getDisasterTypeByName(String name) {
-        // Search for the disaster type by name in the list
-        return disasterTypesCache.stream()
-                .filter(disasterType -> disasterType.getName().toString().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null); // Return null if not found
-    }
-
     // Save disaster types into the database
     public void saveDisasterTypes() {
         // Iterate through enum values
         for (TypeDisasterEnum disasterEnum : TypeDisasterEnum.values()) {
             // Check if disaster type already exists in the database
-            if (!typeDisasterRepository.existsByName(disasterEnum)) {
+            if (!typeDisasterRepository.existsByName(disasterEnum.toString())) {
                 // Save each disaster type if it doesn't exist
                 TypeDisaster disasterType = new TypeDisaster();
-                disasterType.setName(disasterEnum);
+                disasterType.setName(disasterEnum.toString());
                 typeDisasterRepository.save(disasterType);
             }
         }

@@ -23,18 +23,17 @@ public class StartUpController {
     @Autowired
     private SeverityDisasterService severityService;
 
-    // Endpoint to fetch disaster types from the enum
     @GetMapping("/disaster-types")
     public String[] getDisasterTypes() {
-        return Stream.of(TypeDisasterEnum.values())  // Create a stream from enum values
-                .map(Enum::name)  // Convert each enum constant to a string
-                .toArray(String[]::new);  // Return as an array of strings
+        return Stream.of(TypeDisasterEnum.values())
+                .map(Enum::name)
+                .toArray(String[]::new);
     }
     @GetMapping("/severity-levels")
     public String[] getSeverityLevels() {
-        return Stream.of(SeverityDisaster.values())  // Create a stream from the severity enum values
-                .map(Enum::name)  // Convert each enum constant to a string
-                .toArray(String[]::new);  // Return as an array of strings
+        return Stream.of(SeverityDisaster.values())
+                .map(Enum::name)
+                .toArray(String[]::new);
     }
 
     @GetMapping("/getDisasters")

@@ -29,7 +29,8 @@ public class AuthorizationService {
             return new AuthResponse("Invalid username or password", null);
         }
 
-        boolean passwordMatches = passwordEncoder.matches(request.getPassword(), optionalEmployee.get().getPassword());
+        boolean passwordMatches = passwordEncoder.matches(request.getPassword().trim(), optionalEmployee.get().getPassword());
+        System.out.println(request.getPassword() + " " + optionalEmployee.get().getPassword());
 
         if (!passwordMatches) {
             return new AuthResponse("Invalid username or password", null);

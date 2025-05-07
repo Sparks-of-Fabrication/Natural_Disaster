@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface SeverityRepository extends JpaRepository<Severity, UUID> {
-    boolean existsByName(SeverityDisaster name);
+    boolean existsByName(String name);
 }

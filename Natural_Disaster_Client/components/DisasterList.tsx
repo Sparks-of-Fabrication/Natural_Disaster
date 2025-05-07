@@ -1,79 +1,95 @@
 import React, { useEffect, useState } from 'react';
+import { useDisasters } from './DisasterContext'; // Adjust the path as needed
 
-interface MarkerPosition {
-    latitude: number;
-    longitude: number;
-}
-
+// Define the disaster type interface
 interface Disaster {
     id: string;
     type: string;
-    severity: string;
+    position: {
+        lat: number;
+        lng: number;
+    };
     description: string;
-    position: MarkerPosition;
+    severity: string;
+    creationDate: string;
     approved: boolean;
-    creationDate?: string; // ← Updated to match your backend field
 }
 
-interface DisasterFilter {
-    type: string;
-    startDate: string;
-    endDate: string;
+interface DisasterType {
+    id: string;
+    name: string;
 }
 
 const DisasterList: React.FC = () => {
-    const [disasters, setDisasters] = useState<Disaster[]>([]);
-    const [filter, setFilter] = useState<DisasterFilter>({
-        type: '',
-        startDate: '',
-        endDate: '',
-    });
+    const { filteredDisasters, setFilteredDisasters } = useDisasters();
+    const [disasterTypes, setDisasterTypes] = useState<DisasterType[]>([]);
+    const [selectedType, setSelectedType] = useState<string | undefined>();
+    const [startDate, setStartDate] = useState<string | undefined>();
+    const [endDate, setEndDate] = useState<string | undefined>();
+    const [dateOption, setDateOption] = useState<'single' | 'range' | 'none'>('none');
 
     const fetchDisasters = async () => {
+        console.log("fetchDisasters called");
         try {
-            const response = await fetch('/api/startup/getDisasters'); // <-- ⚡ Update this to your real API
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setDisasters(data);
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch('http://localhost:8080/api/disaster/getDisasters', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data: Disaster[] = await response.json();
+            applyFilters(data);
         } catch (error) {
             console.error('Error fetching disasters:', error);
         }
     };
 
+    const fetchDisasterTypes = async () => {
+        try {
+            const res = await fetch('http://localhost:8080/api/employee/getTypes');
+            const data = await res.json();
+            setDisasterTypes(data);
+        } catch (err) {
+            console.error('Error fetching disaster types:', err);
+        }
+    };
+
+    const applyFilters = (data: Disaster[]) => {
+        const filtered = data.filter((disaster) => {
+            const matchesType = selectedType ? disaster.type === selectedType : true;
+            const createdAt = disaster.creationDate ? new Date(disaster.creationDate) : null;
+
+            if (dateOption === 'single' && startDate) {
+                const start = new Date(startDate);
+                return matchesType && createdAt && createdAt.toDateString() === start.toDateString();
+            }
+
+            if (dateOption === 'range' && startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                return matchesType && createdAt && createdAt >= start && createdAt <= end;
+            }
+
+            return matchesType;
+        });
+
+        setFilteredDisasters(filtered);
+    };
+
     useEffect(() => {
         fetchDisasters();
+        fetchDisasterTypes();
     }, []);
 
-    const filteredDisasters = disasters.filter((disaster) => {
-        const matchesType = filter.type ? disaster.type === filter.type : true;
-
-        const createdAt = disaster.creationDate ? new Date(disaster.creationDate) : null;
-        const startDate = filter.startDate ? new Date(filter.startDate) : null;
-        const endDate = filter.endDate ? new Date(filter.endDate) : null;
-
-        const matchesDate = createdAt && startDate && endDate
-            ? createdAt >= startDate && createdAt <= endDate
-            : true;
-
-        return matchesType && matchesDate;
-    });
-
-    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFilter((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const formatLocalDateTime = (isoDate: string) => {
-        const date = new Date(isoDate);
-        return date.toLocaleString(); // Converts to user's local timezone
-    };
+    useEffect(() => {
+        fetchDisasters();
+    }, [selectedType, startDate, endDate, dateOption]);
 
     return (
         <div style={{
             position: 'absolute',
-            top: '80px', // Below the zoom buttons
+            top: '80px',
             left: '10px',
             backgroundColor: 'white',
             padding: '1rem',
@@ -88,33 +104,49 @@ const DisasterList: React.FC = () => {
 
             {/* Filters */}
             <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <select
-                    name="type"
-                    value={filter.type}
-                    onChange={handleFilterChange}
-                    style={{ padding: '0.5rem' }}
-                >
+
+                <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} style={{ padding: '0.5rem' }}>
                     <option value="">All Types</option>
-                    <option value="EARTHQUAKE">Earthquake</option>
-                    <option value="FLOOD">Flood</option>
-                    <option value="TORNADO">Tornado</option>
-                    {/* Add more types if needed */}
+                    {disasterTypes.map((type) => (
+                        <option key={type.id} value={type.name}>{type.name}</option>
+                    ))}
                 </select>
 
-                <input
-                    type="date"
-                    name="startDate"
-                    value={filter.startDate}
-                    onChange={handleFilterChange}
+                <select
+                    value={dateOption}
+                    onChange={(e) => setDateOption(e.target.value as 'single' | 'range' | 'none')}
                     style={{ padding: '0.5rem' }}
-                />
-                <input
-                    type="date"
-                    name="endDate"
-                    value={filter.endDate}
-                    onChange={handleFilterChange}
-                    style={{ padding: '0.5rem' }}
-                />
+                >
+                    <option value="none">No Date Filter</option>
+                    <option value="single">Single Date</option>
+                    <option value="range">Date Range</option>
+                </select>
+
+                {dateOption === 'single' && (
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        style={{ padding: '0.5rem' }}
+                    />
+                )}
+
+                {dateOption === 'range' && (
+                    <>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            style={{ padding: '0.5rem' }}
+                        />
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            style={{ padding: '0.5rem' }}
+                        />
+                    </>
+                )}
             </div>
 
             {/* Disaster List */}
@@ -125,7 +157,7 @@ const DisasterList: React.FC = () => {
                             <strong>{disaster.type}</strong> - {disaster.severity} <br />
                             <span style={{ fontSize: '0.9rem', color: '#555' }}>{disaster.description}</span><br />
                             {disaster.creationDate && (
-                                <small>Reported: {formatLocalDateTime(disaster.creationDate)}</small>
+                                <small>Reported: {new Date(disaster.creationDate).toLocaleString()}</small>
                             )}
                         </li>
                     ))

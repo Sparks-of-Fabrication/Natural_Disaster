@@ -18,9 +18,9 @@ public class SeverityDisasterService {
 
     public void loadSeverityLevels() {
         for (SeverityDisaster severityEnum : SeverityDisaster.values()) {
-            if (!severityRepository.existsByName(severityEnum)) {
+            if (!severityRepository.existsByName(severityEnum.toString())) {
                 Severity severityEntity = new Severity();
-                severityEntity.setName(severityEnum);
+                severityEntity.setName(severityEnum.toString());
                 severityRepository.save(severityEntity);
             }
         }

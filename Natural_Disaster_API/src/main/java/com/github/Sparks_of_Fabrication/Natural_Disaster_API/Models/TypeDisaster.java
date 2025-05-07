@@ -18,8 +18,7 @@ public class TypeDisaster {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private TypeDisasterEnum name;
+    private String name;
 
 
 

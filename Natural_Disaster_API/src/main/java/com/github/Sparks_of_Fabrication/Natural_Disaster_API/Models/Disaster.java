@@ -20,16 +20,14 @@ public class Disaster {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private TypeDisasterEnum type;
+    private String type;
 
     @Embedded
     private MarkerPosition position;
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private SeverityDisaster severity;
+    private String severity;
 
     private LocalDateTime creationDate;
 
