@@ -49,11 +49,12 @@ const LoginButton: React.FC = () => {
             console.log("Parsed data:", data); // Log parsed data to verify it
 
             // Store the token in localStorage and mark user as authenticated
-            localStorage.setItem("token", data.token);
-            console.log(localStorage.getItem("token"));
-            setIsAuthenticated(true);  // Update authentication state
-            setError(""); // Clear error message after successful login
-
+            if(data.token != null) {
+                localStorage.setItem("token", data.token);
+                setIsAuthenticated(true);  // Update authentication state
+                setError(""); // Clear error message after successful login
+                window.location.href = "/web";
+            }
         } catch (err: any) {
             console.error("Login error:", err.message);
             setError(err.message || "Login failed"); // Show error message to user

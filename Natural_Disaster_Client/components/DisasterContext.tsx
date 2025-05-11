@@ -11,6 +11,7 @@ type Disaster = {
         lat: number;
         lng: number;
     };
+    approved: boolean;
 };
 
 type DisasterContextType = {

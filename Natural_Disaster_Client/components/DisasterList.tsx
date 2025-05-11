@@ -27,12 +27,12 @@ const DisasterList: React.FC = () => {
     const [startDate, setStartDate] = useState<string | undefined>();
     const [endDate, setEndDate] = useState<string | undefined>();
     const [dateOption, setDateOption] = useState<'single' | 'range' | 'none'>('none');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const fetchDisasters = async () => {
         console.log("fetchDisasters called");
         try {
             const token = localStorage.getItem("token");
-            console.log(token);
             const response = await fetch('http://localhost:8080/api/disaster/getDisasters', {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -54,6 +54,36 @@ const DisasterList: React.FC = () => {
             console.error('Error fetching disaster types:', err);
         }
     };
+    const handleApprove = async (id: string) => {
+        try {
+            const token = localStorage.getItem("token");
+            await fetch(`http://localhost:8080/api/disaster/approve/${id}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            fetchDisasters(); // Refresh list
+        } catch (err) {
+            console.error("Error approving disaster:", err);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        try {
+            const token = localStorage.getItem("token");
+            await fetch(`http://localhost:8080/api/disaster/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            fetchDisasters(); // Refresh list
+        } catch (err) {
+            console.error("Error deleting disaster:", err);
+        }
+    };
+
 
     const applyFilters = (data: Disaster[]) => {
         const filtered = data.filter((disaster) => {
@@ -80,11 +110,15 @@ const DisasterList: React.FC = () => {
     useEffect(() => {
         fetchDisasters();
         fetchDisasterTypes();
+        const token = localStorage.getItem("token");
+        setIsAuthenticated(!!token);
+        console.log(isAuthenticated);
     }, []);
 
     useEffect(() => {
         fetchDisasters();
     }, [selectedType, startDate, endDate, dateOption]);
+
 
     return (
         <div style={{
@@ -151,19 +185,28 @@ const DisasterList: React.FC = () => {
 
             {/* Disaster List */}
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {filteredDisasters.length > 0 ? (
-                    filteredDisasters.map((disaster) => (
-                        <li key={disaster.id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
-                            <strong>{disaster.type}</strong> - {disaster.severity} <br />
-                            <span style={{ fontSize: '0.9rem', color: '#555' }}>{disaster.description}</span><br />
-                            {disaster.creationDate && (
-                                <small>Reported: {new Date(disaster.creationDate).toLocaleString()}</small>
-                            )}
-                        </li>
-                    ))
-                ) : (
-                    <li>No disasters found</li>
-                )}
+                {filteredDisasters.map((disaster) => (
+                    <li key={disaster.id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '0.5rem' }}>
+                        <strong>{disaster.type}</strong> - {disaster.severity} <br />
+                        <span style={{ fontSize: '0.9rem', color: '#555' }}>{disaster.description}</span><br />
+                        {disaster.creationDate && (
+                            <small>Reported: {new Date(disaster.creationDate).toLocaleString()}</small>
+                        )}
+
+                        {/* Show buttons if unapproved */}
+                        {!disaster.approved && (
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <button onClick={() => handleApprove(disaster.id)} style={{ marginRight: '0.5rem', backgroundColor: 'green', color: 'white', padding: '0.3rem 0.5rem' }}>
+                                    Approve
+                                </button>
+                                <button onClick={() => handleDelete(disaster.id)} style={{ backgroundColor: 'red', color: 'white', padding: '0.3rem 0.5rem' }}>
+                                    Delete
+                                </button>
+                            </div>
+                        )}
+                    </li>
+                ))}
+
             </ul>
         </div>
     );
