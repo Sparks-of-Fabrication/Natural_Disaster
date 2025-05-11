@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DisasterService {
@@ -30,8 +32,19 @@ public class DisasterService {
                     }
                     return true;
                 })
+                .sorted(Comparator.comparing(Disaster::isApproved))
                 .toList();
     }
+    public void approveDisaster(UUID id) {
+        Disaster d = disasterRepository.findById(id).orElseThrow();
+        d.setApproved(true);
+        disasterRepository.save(d);
+    }
+
+    public void deleteDisaster(UUID id) {
+        disasterRepository.deleteById(id);
+    }
+
 
 
 }

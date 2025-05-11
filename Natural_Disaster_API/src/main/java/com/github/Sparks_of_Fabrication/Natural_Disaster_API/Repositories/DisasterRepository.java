@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface DisasterRepository extends JpaRepository<Disaster, UUID> {
     List<Disaster> findByApprovedTrue();
+    List<Disaster> findByApprovedFalse();
     @NotNull
     List<Disaster> findAll();
 }
